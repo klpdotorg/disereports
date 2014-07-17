@@ -1,0 +1,173 @@
+$def with (data)
+<!DOCTYPE html>
+<html lang="en">
+<head>      <!-- META -->
+    <title>Reports</title>
+    
+    <link rel="icon" href="/images/favicon.ico"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+    <script src="css/jquery.js"></script>
+    <script type="text/javascript" src="/js/libs.combined.js"></script>
+    <script type="text/javascript" src="/js/main.js"></script>
+    <script type="text/javascript" src="/js/lib/iCheck/jquery.icheck.min.js"></script>
+    <script type="text/javascript" src="/yui3/build/yui/yui-min.js"></script>
+    <!--script type="text/javascript" src="/yui/build/yahoo-dom-event/yahoo-dom-event.js"></script>
+    <script type="text/javascript" src="/yui/build/treeview/treeview-min.js"></script-->
+    <script type="text/javascript" src="/js/links.js"></script>
+
+    <link type="text/css" rel="stylesheet" href="/js/lib/iCheck/skins/minimal/minimal.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="/css/style.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="/css/link_style.css" media="all"/>
+    <link type="text/css" rel="stylesheet" href="/css/grid.css" media="all"/>
+    
+</head>
+
+<body class="yui-skin-sam" onLoad="javascript:showErrorsIfAny($data);
+    initialize_dropdown($data);">
+
+<header class="main-header">
+    <div class="header-content">
+      <a href="/" class="header_mobile_logo"></a>
+      <a class="mobile_icon" onclick="toggle_mobile_nav();"></a>
+      <nav class="top-nav" role="navigation">
+        <ul id="navigation">
+          <li class="home">
+            <a href="http://www.klp.org.in" title=""><h1>Karnataka Learning Partnership</h1></a>
+          </li>
+          <li class="school_map">
+            <a href="http://www.klp.org.in/map" title="">School Map</a>
+          </li>
+          <li class="programmes">
+            <a href="http://www.klp.org.in/text/reading" title="">Programmes</a>
+            <ul>
+              <li><a href="http://www.klp.org.in/text/reading" title=""><span></span>Akshara</a></li>
+              <li><a href="http://www.klp.org.in/text/sikshana" title=""><span></span>Sikshana</a></li>
+            </ul>
+          </li>
+          <li class="volunteer"><a href="/text/volunteer" title="">Volunteer</a></li>
+          <li class="database">
+            <a href="http://www.klp.org.in/listFiles/2" title="">Data</a>
+            <ul>
+              <li><a href="http://status.klp.org.in" target="_blank" title=""><span></span>Status</a></li>
+              <li><a href="http://www.klp.org.in/listFiles/2" target="_blank" title=""><span></span>Raw Data</a></li>
+              <li><a href="http://github.com/klpdotorg" target="_blank" title=""><span></span>Code</a></li>
+            </ul>
+          </li>
+          <li class="reports">
+            <a href="http://www.klp.org.in/text/reports" title="">Reports</a>
+            <ul>
+              <li><a href="http://dise.klp.org.in" target="_blank" title=""><span></span>DISE</a></li>
+              <li><a href="http://reports.klp.org.in" target="_blank" title=""><span></span>KLP Reports</a></li>
+              <li><a href="http://sslc.klp.org.in" target="_blank" title=""><span></span>SSLC</a></li>
+              <li><a href="http://www.klp.org.in/text/reports" title=""><span></span>Other Reports</a></li>
+            </ul>
+          </li>
+          <li class="about">
+            <a href="http://www.klp.org.in/text/aboutus" title="">About</a>
+            <ul>
+              <li><a href="http://www.klp.org.in/text/aboutus" title=""><span></span>About</a></li>
+              <li><a href="http://www.klp.org.in/text/partners" title=""><span></span>Partners</a></li>
+              <li><a href="http://www.klp.org.in/text/disclaimer" title=""><span></span>Disclaimer</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="clr"></div>
+    </div>
+  </header>
+
+   
+
+<!-- header -->
+
+
+  <div class="page-status">
+    <div class="container">
+      <h1 class="bordered turquoise">Reports</h1>
+
+      <p class="ta_c">
+These reports below are being furnished for your information. You may choose to reproduce or redistribute this information in part or in full to any other person with due acknowledgement of Karnataka Learning Partnership (KLP). You will ensure that no part of the information provided here may be quoted out of context or misrepresented. KLP makes every effort to use reliable and comprehensive information from the government and other independent sources, but KLP does not represent that the data or information are accurate or complete. KLP is an independent, not-for-profit group. The information provided herein has been provided without regard to the objectives or opinions of those who may receive it. Please also see the <a href="http://www.klp.org.in/text/disclaimer" target="_blank">KLP Data Disclaimer</a>.
+      </p>      
+    </div>
+    <section>
+      <div class="page-section-heading-with-menu">
+        <div class="container">
+          <div class="heading"><h2>Select a data type</h2></div>
+        </div>
+
+        <div class="sub-sections-list">
+          <ul>
+            <li id="preschool" class="active">
+              <a href="" onClick="loadData(['electrol'],['educational']); return false;" title="">Electoral Boundaries</a>
+            </li>
+            <li id="school" >
+              <a href="" onClick="loadData(['educational'],['electrol']); return false;" title="">Educational Boundaries</a>
+            </li>
+            <!-- <li id="programmes">
+              <a href="" onClick="loadData('programmes');return false;" title="">Current Programmes</a>
+            </li> -->
+          </ul>
+        </div>
+        <div class="options-wrapper" id="select_panel">
+          <div id="electrol_div">
+              <div class="option_item" id="mp_div">
+                <select id="mp" name="mp" onchange="displayPane($data,'mp','1','mla')"><option>MP</option></select>
+              </div>
+              <div class="option_item" id="mla_div">
+                 <select id="mla" name="mla" onchange="displayPane($data,'mla','mp','none')"><option>MLA</option></select>
+              </div>
+          </div> 
+          <div id="educational_div" style="display:none;">
+              <div class="option_item" id="district_div"> 
+	           <select id="district" name="district" onchange="displayPane($data,'district','2','block')"><option>DISTRICT</option></select>
+              </div>
+              <div class="option_item" id="block_div"> 
+		    <select id="block" name="block" onchange="displayPane($data,'block','district','cluster')"><option>BLOCK</option></select>
+              </div>
+              <div class="option_item" id="cluster_div">
+                    <select id="cluster" name="cluster" onchange="displayPane($data,'cluster','block','none')"><option>CLUSTER</option></select>
+              </div>
+          </div>
+          <div class="option_item" id="year_div">
+  	      <select id="year" name="year" onchange="replace_year(this.value)"></select>
+	  </div>
+        </div></div>
+    </section>
+
+<section class="ie-z-index-fix">
+
+      <div class="container">
+<div class="grid_12 prefix_3">
+  <div id="content_pane"></div>
+  <div id="error_pane" style="visibility:hidden"></div></div>
+<a href="/charts/mp/Bangalore South/english/finance/1213" target="_blank"></a>
+      </div>
+</section> <!-- /container -->
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="css/bootstrap-transition.js"></script>
+    <script src="css/bootstrap-alert.js"></script>
+    <script src="css/bootstrap-modal.js"></script>
+    <script src="css/bootstrap-dropdown.js"></script>
+    <script src="css/bootstrap-scrollspy.js"></script>
+    <script src="css/bootstrap-tab.js"></script>
+    <script src="css/bootstrap-tooltip.js"></script>
+    <script src="css/bootstrap-popover.js"></script>
+    <script src="css/bootstrap-button.js"></script>
+    <script src="css/bootstrap-collapse.js"></script>
+    <script src="css/bootstrap-carousel.js"></script>
+    <script src="css/bootstrap-typeahead.js"></script>
+
+  
+<div class="footer">
+   <div id="lastupdated" class="container"></div>
+</div>
+  <div class="container">
+<center><h5>&copy; 2012 Karnataka Learning Partnership</h5></center></div>
+</div>
+
+</body></html>

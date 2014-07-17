@@ -1,0 +1,57 @@
+/*
+  Variable Grid System (Fluid Version).
+  Learn more ~ http://www.spry-soft.com/grids/
+  Based on 960 Grid System - http://960.gs/ & 960 Fluid - http://www.designinfluences.com/
+
+  Licensed under GPL and MIT.
+*/
+
+
+dl.gend-def {
+}
+
+.gend-def dd {
+margin: 0 0 0 50px;
+padding: 0 0 0.5em 0;
+font-size: 11pt;
+}
+
+.gend-def dd:before {
+content: " "; 
+} 
+
+.gend-def dt {
+float: left;
+clear: left;
+width: 50px;
+height: 100px;
+text-align: left;
+font-weight: bold;
+font-size: 15pt;
+padding-top:10px;
+}
+
+dl.data-def{
+padding-left:20px;
+}
+
+.data-def dt {
+float: left;
+clear: left;
+width: 240px;
+text-align: left;
+color:  black;
+font-size: 10pt;
+font-weight: bold;
+}
+
+.data-def dd:before {
+content: ":";
+}
+
+.data-def dd{
+margin: 0 0 0 20px;
+padding: 0 0 0.5em 0;
+font-size: 10pt;
+}
+

@@ -1,0 +1,106 @@
+$def with (data)
+<html>
+  <head>
+  <title>KLP Reports</title>
+  <script type="text/javascript" src="js/simpletreemenu.js"></script>
+  <script type="text/javascript" src="js/links.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/simpletree.css" />
+  <link rel="stylesheet" type="text/css" href="css/grid.css" />
+  <link rel="stylesheet" type="text/css" href="css/link_style.css" />
+  </head>
+  <body>
+<div class="container container_12">
+<!--======================-->
+    <div class="clearheader">&nbsp;</div>
+  <div class="grid_12"><h1>KLP Reports </h1></div>
+  <div class="clearbreak">&nbsp;</div>
+  <hr></hr>
+    <div class="grid_4">
+  <ul rel="open" id="treemenu2" class="treeview">
+  <li>Electoral Boundaries
+    <ul rel="closed">
+      <li>MP Constituencies
+        <ul rel="closed">
+          <li><a href="#" onClick="displayPane($data,'mp','demographics');">Demographics</a></li>
+          <li><a href="#" onClick="displayPane($data,'mp','finance');">Finance</a></li>
+          <li><a href="#" onClick="displayPane($data,'mp','infrastructure');">Infrastructure</a></li>
+          <li><a href="#" onClick="displayPane($data,'mp','library');">Library</a></li>
+          <li><a href="#" onClick="displayPane($data,'mp','learning');">Learning</a></li>
+        </ul>
+      </li>
+      <li>MLA Constituencies
+	        <ul rel="closed">
+	          <li><a href="#" onClick="displayPane($data,'mla','demographics');">Demographics</a></li>
+	          <li><a href="#" onClick="displayPane($data,'mla','finance');">Finance</a></li>
+	          <li><a href="#" onClick="displayPane($data,'mla','infrastructure');">Infrastructure</a></li>
+	          <li><a href="#" onClick="displayPane($data,'mla','library');">Library</a></li>
+	          <li><a href="#" onClick="displayPane($data,'mla','learning');">Learning</a></li>
+	        </ul>
+      </li>
+      <li>Corporator Reports
+         <ul rel="closed">
+	          <li><a href="#" onClick="displayPane($data,'corporator','demographics');">Demographics</a></li>
+	          <li><a href="#" onClick="displayPane($data,'corporator','finance');">Finance</a></li>
+	          <li><a href="#" onClick="displayPane($data,'corporator','infrastructure');">Infrastructure</a></li>
+	          <li><a href="#" onClick="displayPane($data,'corporator','library');">Library</a></li>
+         </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Education Boundaries
+      <ul rel="closed">
+        <li>School Boundaries
+          <ul rel="closed">
+		    <li>District
+              <ul rel="closed">
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+		    <li>Block
+		      <ul rel="closed">
+			    <!--li><a href="#" onClick="displayPane($data,'block','nutrition');">Nutrition</a></lii-->
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+		    <li>Cluster
+		      <ul rel="closed">
+	            <!--li><a href="#" onClick="displayPane($data,'block','nutrition');">Nutrition</a></li-->
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Preschool Boundaries
+          <ul rel="closed">
+		    <li>District
+              <ul rel="closed">
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+            <li>Project
+		      <ul rel="closed">
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+		    <li>Circle
+		      <ul rel="closed">
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </li>
+</ul>
+    </div>
+ <div class="grid_8">
+  <div id="content_pane">
+</div>
+</div> <!--closing container -->
+  </body>
+  <script type="text/javascript">
+    ddtreemenu.createTree("treemenu2", true, 5);
+    ddtreemenu.flatten('treemenu2', 'contact');
+  </script>
+</html>

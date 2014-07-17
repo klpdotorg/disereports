@@ -1,0 +1,230 @@
+$def with (data)
+<html>
+  <head>
+  <title>KLP Reports</title>
+  <link rel="icon" href="/images/favicon.ico"/>
+  <script type="text/javascript" src="/js/simpletreemenu.js"></script>
+  <script type="text/javascript" src="/js/links.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/simpletree.css" />
+  <link rel="stylesheet" type="text/css" href="/css/grid.css" />
+  <link rel="stylesheet" type="text/css" href="/css/link_style.css" />
+  
+  <script type="text/javascript" src="/js/jquery-1.9.1.min.js"></script>
+  <script type="text/javascript" src="/js/libs.combined.js"></script>
+  <script type="text/javascript" src="/js/lib/iCheck/jquery.icheck.min.js"></script>
+  <script type="text/javascript" src="/js/main.js"></script>
+  <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+  <link type="text/css" rel="stylesheet" href="/js/lib/iCheck/skins/minimal/minimal.css"/>
+    
+  </head>
+  <body onLoad="javascript:showErrorsIfAny($data);
+    initialize_dropdown($data);">
+  
+  <header class="main-header">
+    <div class="header-content">
+      <a href="/" class="header_mobile_logo"></a>
+      <a class="mobile_icon" onclick="toggle_mobile_nav();"></a>
+      <nav class="top-nav" role="navigation">
+        <ul id="navigation">
+          <li class="home">
+            <a href="http://www.klp.org.in" title=""><h1>Karnataka Learning Partnership</h1></a>
+          </li>
+          <li class="school_map">
+            <a href="http://www.klp.org.in/map" title="">School Map</a>
+          </li>
+          <li class="programmes">
+            <a href="http://www.klp.org.in/text/reading" title="">Programmes</a>
+            <ul>
+              <li><a href="http://www.klp.org.in/text/reading" title=""><span></span>Reading</a></li>
+              <li><a href="http://www.klp.org.in/text/maths" title=""><span></span>Math</a></li>
+              <li><a href="http://www.klp.org.in/text/library" title=""><span></span>Library</a></li>
+              <li><a href="/text/preschool" title=""><span></span>Pre-School</a></li>
+            </ul>
+          </li>
+          <li class="volunteer"><a href="http://www.klp.org.in/text/volunteer" title="">Volunteer</a></li>
+          <li class="database">
+            <a href="http://www.klp.org.in/listFiles/2" title="">Data</a>
+            <ul>
+              <li><a href="http://status.klp.org.in" target="_blank" title=""><span></span>Status</a></li>
+              <li><a href="http://www.klp.org.in/listFiles/2" target="_blank" title=""><span></span>Raw Data</a></li>
+              <li><a href="http://github.com/klpdotorg" target="_blank" title=""><span></span>Code</a></li>
+            </ul>
+          </li>
+          <li class="reports">
+            <a href="http://www.klp.org.in/text/reports" title="">Reports</a>
+            <ul>
+              <li><a href="/" target="_blank" title=""><span></span>KLP Reports</a></li>
+              <li><a href="http://sslc.klp.org.in" target="_blank" title=""><span></span>SSLC</a></li>
+              <li><a href="http://www.klp.org.in/text/reports" title=""><span></span>Other Reports</a></li>
+            </ul>
+          </li>
+          <li class="about">
+            <a href="http://www.klp.org.in/text/aboutus" title="">About</a>
+            <ul>
+              <li><a href="http://www.klp.org.in/text/aboutus" title=""><span></span>About</a></li>
+              <li><a href="http://www.klp.org.in/text/partners" title=""><span></span>Partners</a></li>
+              <li><a href="http://www.klp.org.in/text/disclaimer" title=""><span></span>Disclaimer</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <div class="clr"></div>
+    </div>
+  </header>
+
+<div class="container container_12">
+<h1 class="bordered turquoise">Reports</h1>
+<!--======================-->
+    <div class="clearheader">&nbsp;</div>
+<section>
+      <div class="page-section-heading-with-menu">
+        <div class="container">
+          <div class="heading"><h2>Select a data type</h2></div>
+        </div>
+
+        <div class="sub-sections-list">
+          <ul>
+            <li id="preschool" class="active">
+              <a href="" onClick="loadData('preschool');return false;" title="">Electoral Boundaries</a>
+            </li>
+            <li id="school" >
+              <a href="" onClick="loadData('school');return false;" title="">Education Boundaries</a>
+            </li>
+            <li id="programmes">
+              <a href="" onClick="loadData('programmes');return false;" title="">Current Programmes</a>
+            </li>
+          </ul>
+        </div>
+        <div class="options-wrapper" id="select_panel">
+          <div class="option_item" id="mp">
+              <select id="mp" name="mp" onchange="displayPane($data,'mp','1','mla')"><option>MP</option></select>
+          </div>
+          <div class="option_item" id="mla">
+              <select id="mla" name="mla" onchange="displayPane($data,'mla','mp','none')"><option>MLA</option></select>
+          </div>
+        </div>
+    </section>
+<section class="ie-z-index-fix">
+
+      <div class="container">
+        <div id="load_data"></div>
+      </div>
+</section>
+  <div class="grid_12">
+  <h1 class="bordered red">KLP Reports</h1>
+  <select id="mp" name="mp" onchange="displayPane($data,'mp','1','mla')"><option>MP</option></select>
+  <select id="mla" name="mla" onchange="displayPane($data,'mla','mp','none')"><option>MLA</option></select>
+  <select id="district" name="mla" onchange="displayPane($data,'district','2','block')"><option>DISTRICT</option></select>
+  <select id="block" name="block" onchange="displayPane($data,'block','district','cluster')"><option>BLOCK</option></select>
+  <select id="cluster" name="cluster" onchange="displayPane($data,'cluster','block','none')"><option>CLUSTER</option></select>
+  <select id="year" name="year" onchange="replace_year(this.value)"></select>
+    <div class="grid_4">
+  <ul rel="open" id="treemenu2" class="treeview">
+<!--  <li>Electoral Boundaries
+    <ul rel="closed">
+      <li>MP Constituencies
+        <ul rel="closed">
+          <li><a href="#" onClick="displayPane($data,'mp','demographics');">Demographics</a></li>
+          <li><a href="#" onClick="displayPane($data,'mp','finance');">Finance</a></li>
+          <li><a href="#" onClick="displayPane($data,'mp','infrastructure');">Infrastructure</a></li>
+        </ul>
+      </li>
+      <li>MLA Constituencies
+	        <ul rel="closed">
+	          <li><a href="#" onClick="displayPane($data,'mla','demographics');">Demographics</a></li>
+	          <li><a href="#" onClick="displayPane($data,'mla','finance');">Finance</a></li>
+	          <li><a href="#" onClick="displayPane($data,'mla','infrastructure');">Infrastructure</a></li>
+	        </ul>
+      </li>
+     <!-- <li>Corporator Reports
+         <ul rel="closed">
+	          <li><a href="#" onClick="displayPane($data,'corporator','demographics');">Demographics</a></li>
+	          <li><a href="#" onClick="displayPane($data,'corporator','finance');">Finance</a></li>
+	          <li><a href="#" onClick="displayPane($data,'corporator','infrastructure');">Infrastructure</a></li>
+	          <li><a href="#" onClick="displayPane($data,'corporator','library');">Library</a></li>
+         </ul>
+      </li> --
+    </ul>
+  </li>
+   <li>Education Boundaries
+      <ul rel="closed">
+        <li>School Boundaries
+          <ul rel="closed">
+		<li>District
+              <ul rel="closed">
+		  <li><a href="#" onClick="displayPane($data,'district','demographics');">Demographics</a></li>
+                  <li><a href="#" onClick="displayPane($data,'district','finance');">Finance</a></li>
+                  <li><a href="#" onClick="displayPane($data,'district','infrastructure');">Infrastructure</a></li>
+              </ul>
+            </li>
+	<li>Block
+	 <ul rel="closed">
+                  <li><a href="#" onClick="displayPane($data,'block','demographics');">Demographics</a></li>
+                  <li><a href="#" onClick="displayPane($data,'block','finance');">Finance</a></li>
+                  <li><a href="#" onClick="displayPane($data,'block','infrastructure');">Infrastructure</a></li>
+		<!--li><a href="#" onClick="displayPane($data,'block','nutrition');">Nutrition</a></li> --
+		</ul>
+            </li>
+<li>Cluster
+<ul rel="closed">
+                  <li><a href="#" onClick="displayPane($data,'cluster','demographics');">Demographics</a></li>
+                  <li><a href="#" onClick="displayPane($data,'cluster','finance');">Finance</a></li>
+                  <li><a href="#" onClick="displayPane($data,'cluster','infrastructure');">Infrastructure</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li> -->
+<!--        <li>Preschool Boundaries
+          <ul rel="closed">
+		    <li>District
+              <ul rel="closed">
+                  <li><a href="#" onClick="displayPane($data,'pre_dist','demographics';">Demographics</a></li>
+                  <li><a href="#" onClick="displayPane($data,'pre_dist','finance');">Finance</a></li>
+                  <li><a href="#" onClick="displayPane($data,'pre_dist','infrastructure');">Infrastructure</a></li>
+                  <li><a href="#" onClick="displayPane($data,'pre_dist','library');">Library</a></li>
+                  <li><a href="#" onClick="displayPane($data,'pre_dist','learning');">Learning</a></li>
+
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+            <li>Project
+		      <ul rel="closed">
+                  <li><a href="#" onClick="displayPane($data,'project','demographics');">Demographics</a></li>
+                  <li><a href="#" onClick="displayPane($data,'project','finance');">Finance</a></li>
+                  <li><a href="#" onClick="displayPane($data,'project','infrastructure');">Infrastructure</a></li>
+                  <li><a href="#" onClick="displayPane($data,'project','library');">Library</a></li>
+                  <li><a href="#" onClick="displayPane($data,'project','learning');">Learning</a></li>
+
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+		    <li>Circle
+		      <ul rel="closed">
+                  <li><a href="#" onClick="displayPane($data,'circle','demographics');">Demographics</a></li>
+                  <li><a href="#" onClick="displayPane($data,'circle','finance');">Finance</a></li>
+                  <li><a href="#" onClick="displayPane($data,'circle','infrastructure');">Infrastructure</a></li>
+                  <li><a href="#" onClick="displayPane($data,'circle','library');">Library</a></li>
+                  <li><a href="#" onClick="displayPane($data,'circle','learning');">Learning</a></li>
+
+			    <li>Not Available Yet</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li> -->
+  </li>
+</ul>
+    </div>
+ <div class="grid_8">
+  <div id="content_pane"></div>
+  <div id="error_pane" style="visibility:hidden"></div>
+  
+</div>
+</div> <!--closing container -->
+  </body>
+  <script type="text/javascript">
+    ddtreemenu.createTree("treemenu2", true, 5);
+    ddtreemenu.flatten('treemenu2', 'contact');
+  </script>
+</html>

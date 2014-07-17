@@ -1,0 +1,108 @@
+/*
+  Variable Grid System (Fluid Version).
+  Learn more ~ http://www.spry-soft.com/grids/
+  Based on 960 Grid System - http://960.gs/ & 960 Fluid - http://www.designinfluences.com/
+
+  Licensed under GPL and MIT.
+*/
+
+/* Custom CSS added for report */
+
+hr {
+  border-top: 0.5px;
+  color: #aaa;
+  background-color: #aaa;
+  height:1px;
+  width:100%;
+  margin-left: 0; 
+  text-align: left;
+}
+
+h1 {
+font-size: 16pt;
+/*color: #174563;*/
+color:#46af2f;
+font-weight: bold;
+margin-top: 0px;
+margin-bottom: 3px;
+font-family: sans;
+}
+h2 {
+font-size: 12pt;
+/*color: #174563;*/
+color:#46af2f;
+font-weight: bold;
+margin-top: 0px;
+margin-bottom: 3px;
+font-family: sans;
+} 
+h3 {
+font-size: 14pt;
+color: #46af2f;
+/*color:#000;*/
+font-weight: bold;
+margin-top: 0px;
+margin-bottom: 3px;
+font-family: sans;
+font-variant: small-caps;
+}
+
+.clearbreak {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+  page-break-before:avoid;
+  page-break-after:always;
+}
+
+
+.clearheader {
+  clear: both;
+  display: block;
+  overflow: hidden;
+  visibility: hidden;
+  width: 0;
+  height: 50px;
+}
+
+body {
+font-family: sans;
+font-size: 11.5pt;
+margin-top: 0px;
+margin-right: 0px;
+margin-bottom: 0px;
+margin-left: 0px;
+/*background-image: url(../images/KLP_logo_watermark.png);
+background-repeat:no-repeat;
+background-position:right top;
+background-size: 20%; /* CSS3 only, but not really necessary if you make a large enough image */
+}
+
+dl.header-def {
+}
+
+.header-def dt {
+float: left;
+clear: left;
+width: 290px;
+text-align: left;
+font-weight: bold;
+/*color:  #174563;*/
+color:#000;
+font-size: 11pt;
+}
+
+.header-def dd:before {
+content: ":";
+}
+
+.header-def dd {
+margin: 0 0 0 50px;
+padding: 0 0 0.5em 0;
+font-size: 10pt;
+margin-top: 2px;
+}
+

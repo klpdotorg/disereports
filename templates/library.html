@@ -1,0 +1,131 @@
+$def with (data)
+<!DOCTYPE html>
+<html> 
+  <head> 
+    <title>School Profiles by MP/MLA Constituency</title>
+    <link type="text/css" rel="stylesheet" href="/css/af/style.css"/>
+    <link type="text/css" rel="stylesheet" href="/css/grid.css"/>
+    <style>
+    .google-visualization-table-table *  { font-size:small; }
+    .google-visualization-table-tr-head, .google-visualization-table-tr-head td, .google-visualization-table-tr-head-nonstrict 
+    {    
+      font-weight: bold;    
+      background: none !important;
+      text-align: center;  
+      border-bottom: 1px solid #0E0E9F;
+    } 
+    </style> 
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="/js/library.js"></script>
+  </head>
+  <body onload="initialise($data)" >
+
+<div class="container container_12">
+<!--======================-->
+    <div class="clearheader">&nbsp;</div>
+    <div class="grid_8"> 
+    	<div id="constname"></div>
+    </div>
+    <div class="grid_4">
+    <div id="reportdate" style='text-align:right; font-size:9pt'></div>
+    </div>
+<!------------------------->
+    <div class="clear">&nbsp;</div>
+    <div class="grid_7">
+    	<div id="constinfo"></div>
+        <div id="hiddenip"></div>
+     	<div id="instcounts"></div>
+    </div> 
+    <div class="grid_5"> 
+    <h3 style='text-align:right'><div id="rephead"></div></h3>
+    </div>
+<!--======================-->
+    <div class="clear">&nbsp;</div>
+    <div class="hr"><hr/></div>
+    <div class="grid_6">
+      <h2><div id='libintrohead'></div></h2>
+      <div id="libintro_txt" style="text-align:justify"></div>
+    </div>
+    <div class="grid_6">
+      <h2><div id='libstatushead'></div></h2>
+      <div id="libstatus_txt" style="text-align:justify"></div>
+      <div id="libstatus_tb"></div>
+      <!--div id="lib_count"></div>
+      <div id="libsch_count"></div>
+      <div id="libsch_moi_gph"></div-->
+   </div>
+<!--======================-->
+    <div class="clear">&nbsp;</div>
+    <div class="hr"><hr/></div>
+   <div class="grid_6">
+      <h2><div id='libinfrahead'></div></h2>
+      <div id="libinfra_txt" style="text-align:justify"></div>
+      <div id="libtraining_tb" style="text-align:justify"></div>
+   </div>
+   <div class="grid_6">
+      <div id="libinfra_tb"></div>
+      <div id="libexp_txt" style="text-align:justify"></div>
+   </div>
+<!--======================-->
+   <div class="clear">&nbsp;</div>
+   <div class="hr"><hr/></div>
+   <div class="grid_12">
+      <h2><div id='libtxnlanghead'></div></h2>
+      <div id="libtxn_txt" style="text-align:justify"></div>
+      <div id="libtxnlang_txt"></div>
+   </div>
+   <div class="clear">&nbsp;</div>
+   <div class="grid_12">
+      <div id="libtxntimelang_gph"></div>
+   </div>
+   <!--div class="clear">&nbsp;</div>
+   <div class="grid_12">
+      <div id="libtxnclasslang_tb"></div>
+   </div-->
+<!--======================-->
+   <div class="clearbreak">&nbsp;</div>
+   <div class="hr"><hr/></div>
+   <div class="grid_12">
+      <h2><div id='libtxnlevelhead'></div></h2>
+      <div id="libtxnlevel_txt"></div>
+   </div>
+   <div class="clear">&nbsp;</div>
+   <div class="grid_12">
+     <div class="grid_2">
+       <div id="lib_graphic"></div>
+     </div>
+     <div class="grid_10">
+       <div id="libtxntimelevel_gph"></div>
+       <div id="libtxnclasslevel_tb"></div>
+     </div>
+     <div class="clear">&nbsp;</div>
+   </div>
+<!--======================-->
+   <div class="clear">&nbsp;</div>
+   <div class="hr"><hr/></div>
+   <div class="grid_12">
+    <h2><div id="libneighhead"></div></h2>
+   </div>
+   <div class="grid_12">
+      <div id="libneighbours_txt" style="text-align:justify"></div>
+   </div>
+    <div class="clear">&nbsp;</div>
+   <div class="grid_12">
+      <div id="libneighbours_gph"></div>
+   </div>
+    <div class="clear">&nbsp;</div>
+   <div class="grid_12">
+      <div id="libneighbours_tb"></div>
+   </div>
+<!--======================--> 
+    <div class="clear">&nbsp;</div>
+    <div class="hr"><hr/></div>
+    <div class="grid_12">
+      <div id="source_txt" style="text-align:left; font-size:8pt"></div>  
+      <div class="hr"><hr/></div>
+      <div id="collab_txt" style="text-align:center; font-size:9pt"></div>  
+    </div>
+
+</div><!--container-->
+  </body>
+</html> 
