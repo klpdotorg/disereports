@@ -61,7 +61,7 @@ def getLibText(data,lang):
     neighbours = data["neighbours_lib"].keys()
     if neighbours:
       neighbours.remove(data['const_name'])
-      neighbourslib_txt = '<br/>' + data['const_name'] + ' ' + transDict['9'] + ', '.join(neighbours) + '. ' + transDict['7']
+      neighbourslib_txt = '<br/>' + str(data['const_name']) + ' ' + transDict['9'] + ', '.join([str(x) for x in neighbours]) + '. ' + transDict['7']
       data['libneighbours_txt'] = neighbourslib_txt 
     return data
 

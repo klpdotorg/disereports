@@ -4,12 +4,12 @@ import traceback
 import sys, os,traceback
 from operator import itemgetter
 import db.KLPDB
-import db.Queries
+import db.Queries_dise
 from utils.CommonUtil import CommonUtil
 
 #connection = db.KLPDB.getConnection()
 #cursor = connection.cursor()
-cursor = db.KLPDB.getWebDbConnection()
+cursor = db.KLPDB.getWebDbConnection1()
 
 class Finances:
 
@@ -25,6 +25,15 @@ class Finances:
     elif cons_type == 3:
       data["const_type"]='Corporator'
       constype = "corporator"
+    elif cons_type == 4:
+      data["const_type"]='District'
+      constype = "district"
+    elif cons_type == 5:
+      data["const_type"]='Block'
+      constype = "block"
+    elif cons_type == 6:
+      data["const_type"]='Cluster'
+      constype = "cluster"
     data["const_name"]=str(constid[0])
     data.update(self.constituencyData(constype,constid))
     data.update(self.getTLMGrant(constype,constid))
@@ -36,7 +45,7 @@ class Finances:
     data = {}
     tabledata = {}
     querykey = 'tlmgrant_sch' 
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     for row in result:
       tabledata['grant_amount'] = str(row.total_grant)
       tabledata['teacher_count'] = str(int(row.total_grant)/int(row.grant_amount))
@@ -48,7 +57,7 @@ class Finances:
     data = {}
     tabledata = {}
     querykey = 'annualgrant_sch' 
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     total_grant = 0
     for row in result:
       tabledata[row.cat] = [str(row.count),str(row.total_grant)]
@@ -61,7 +70,7 @@ class Finances:
     data = {}
     tabledata = {}
     querykey = 'mtncgrant_sch' 
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     total_grant = 0
     for row in result:
       tabledata[row.classroom_count] = [str(row.count), str(row.total_grant)]
@@ -79,7 +88,7 @@ class Finances:
         crit='neighbor_'
         query_keys = ['tlm','annual','mntnc'] 
         for key in query_keys:
-          result = cursor.query(db.Queries.getDictionary(constype)[constype_str+'_'+crit+key], {'s':tuple(neighbours)})
+          result = cursor.query(db.Queries_dise.getDictionary(constype)[constype_str+'_'+crit+key], {'s':tuple(neighbours)})
           for row in result:
             if row.const_ward_name.strip() in tabledata.keys():
               if key in tabledata[row.const_ward_name.strip()].keys():

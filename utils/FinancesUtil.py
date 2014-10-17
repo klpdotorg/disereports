@@ -4,7 +4,7 @@ import codecs
 
 import sys, os,traceback
 
-def getFinancesText(data,lang):
+def getFinancesText(data,lang,constype):
     transDict = {}
     f = codecs.open(os.path.join(os.getcwd(),'translations/fin_translations_text.csv'),'r','utf-8')
     for line in f.readlines():
@@ -13,6 +13,21 @@ def getFinancesText(data,lang):
         transDict[str(text[0])] = text[1]
       else:
         transDict[str(text[0])] = text[2]
+    if constype == 4:
+       transDict['1']=transDict['32']
+       transDict['19']=transDict['35']
+       transDict['24']=transDict['38']
+       transDict['11']=transDict['41']
+    elif constype == 5:
+       transDict['1']=transDict['33']
+       transDict['19']=transDict['36']
+       transDict['24']=transDict['39']
+       transDict['11']=transDict['42']
+    elif constype == 6:
+       transDict['1']=transDict['34']
+       transDict['19']=transDict['37']
+       transDict['24']=transDict['40']
+       transDict['11']=transDict['43']
     intro_txt_str=transDict['1'] + transDict['18'] 
     summary_txt_str=transDict['17']
     annual_txt_str=transDict['17']
@@ -41,9 +56,9 @@ def getFinancesText(data,lang):
       annual_txt_str = annual_txt_str + transDict['30'] + str(totalsg) + transDict['31']
       data['annual_txt'] = annual_txt_str
       #---------------------- Maintenance
-      mtnc_txt_str = transDict['21']  + formatIndian(data["mtncgrant_sch"]["With 3 classrooms or fewer "][1]) 
-      mtnc_txt_str = mtnc_txt_str + transDict['22'] + formatIndian(data["mtncgrant_sch"]["With more than 3 classrooms "][1]) + transDict['8'] + '. '
-      mtnc_txt_str = mtnc_txt_str + transDict['28'] + str(int(data["mtncgrant_sch"]["With 3 classrooms or fewer "][0]) + int(data["mtncgrant_sch"]["With more than 3 classrooms "][0]))
+      mtnc_txt_str = transDict['21']  + formatIndian(data["mtncgrant_sch"].get("With 3 classrooms or fewer ",['0','0'])[1]) 
+      mtnc_txt_str = mtnc_txt_str + transDict['22'] + formatIndian(data["mtncgrant_sch"].get("With more than 3 classrooms ",['0','0'])[1]) + transDict['8'] + '. '
+      mtnc_txt_str = mtnc_txt_str + transDict['28'] + str(int(data["mtncgrant_sch"].get("With 3 classrooms or fewer ",['0','0'])[0]) + int(data["mtncgrant_sch"].get("With more than 3 classrooms ",['0','0'])[0]))
       mtnc_txt_str = mtnc_txt_str +'/'+str(totalsg)+ transDict['29']
       data['mtnc_txt'] = mtnc_txt_str
   
@@ -53,9 +68,9 @@ def getFinancesText(data,lang):
         neighbours = data["neighbours_grant"].keys()
       if neighbours:
         neighbours.remove(data['const_name'])
-        neighbours_txt_str = ' ' + data['const_name'] + ' ' 
+        neighbours_txt_str = ' ' + str(data['const_name']) + ' ' 
         neighbours_txt_str = neighbours_txt_str + transDict['11']
-        neighbours_txt_str = neighbours_txt_str + ', '.join(neighbours) + '. ' 
+        neighbours_txt_str = neighbours_txt_str + ', '.join([str(x) for x in neighbours]) + '. ' 
         neighbours_txt_str = neighbours_txt_str + transDict['12']
       data['neighbours_txt'] = neighbours_txt_str + transDict['15']
       data['source_txt'] = transDict['16']

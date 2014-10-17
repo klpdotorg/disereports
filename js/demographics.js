@@ -22,10 +22,24 @@ function roundNumber(rnum, rlength) { // Arguments: number to round, number of d
       
 function initialise(data)
 {
-
   info = data;
-  translations = info['transdict']
-  now = new Date()
+  consttype=info["const_type"];
+  translations = info['transdict'];
+  translations['H40']=translations['H126'];
+  if(consttype == 'block_name'){
+     info["const_type"]='BLOCK';
+     translations['H40']=translations['H124'];
+  }
+  else if(consttype == 'cluster_name'){
+     info["const_type"]='CLUSTER';
+     translations['H40']=translations['H125'];
+  }
+  else if(consttype == 'district'){
+     info["const_type"]='DISTRICT';
+     translations['H40']=translations['H123'];
+  }
+  consttype=info["const_type"];
+  now = new Date();
   document.getElementById("reportdate").innerHTML = now.toDateString();
   document.getElementById("rephead").innerHTML = "<img src=\'/images/KLP_logo2.png\' width='130px' vertical-align='top' border=0 />" + '<br/>' + translations['H56'];
 //  document.getElementById("rephead").innerHTML =  translations['H56'];
@@ -34,31 +48,45 @@ function initialise(data)
   document.getElementById("enrolhead").innerHTML = translations['H29'];
   document.getElementById("langhead").innerHTML = translations['H36'];
   document.getElementById("neighhead").innerHTML = translations['H40'];
-
   document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
                                                  + info['const_name'] + "</h1>";
-  document.getElementById("constinfo").innerHTML =  "<dl class='header-def'><dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
-                                                + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
-                                                + "<dt>" + translations['H10'] + "</dt><dd>" + info["const_party"] + "</dd>" 
-                                                + "</dl>";
+  constinfo =  "<dl class='header-def'><dt>";
+  if(consttype=='MP Constituency' || consttype=='MLA Constituency' || consttype=='Ward'){
+    constinfo = constinfo + "<dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
+						 + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
+                                                + "<dt>" + translations['H10'] + "</dt><dd>" + info["const_party"] + "</dd>"; 
+  }
+  else if(consttype=='BLOCK' || consttype=='PROJECT'){
+    constinfo =constinfo  + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>";
+  }
+  else if(consttype=='CLUSTER' || consttype=='CIRCLE'){
+    constinfo = constinfo + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>"
+                                                + "<dt>" + translations["BLOCK"] + "</dt><dd>" + info["const_blck"] + "</dd>";
+  }
+  document.getElementById("constinfo").innerHTML = constinfo + "</dl>";;
   document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
           '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
           '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
           '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
-  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt>' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["schcount"] + '</dd>'
-                                                  + '<dt>' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["preschcount"] + '</dd></dl>';
+
+//document.getElementById('instcounts').innerHTML='<dl class=\'header-def\'><dt>' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["schcount"] + '</dd>' + '<dt>' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["preschcount"] + '</dd></dl>';
+  var show_counts = '<dl class="header-def">';
   if(parseInt(info["inst_counts"]["schcount"]) != 0){
+    show_counts=show_counts+'<dt>' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["schcount"] + '</dd>';
     gend_sch_Chart();
     mt_sch_Chart();
     moi_sch_Chart();
     cat_sch_Chart();
     enrol_sch_Chart();
   }
-  if(parseInt(info["inst_counts"]["preschcount"]) != 0){
+  /*if(parseInt(info["inst_counts"]["preschcount"]) != 0){
+    show_counts=show_counts+ '<dt>' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["preschcount"] + '</dd>';
     mt_presch_Chart();
     gend_presch_Chart();
     enrol_presch_Chart();
-  }
+  }*/
+document.getElementById('instcounts').innerHTML=show_counts+'</dl>';
+//alert(show_counts);
   if(info["neighbours_sch_hasdata"] != 0) {
     neighbours_sch_Chart();
     //neighbours_sch_table();
@@ -74,42 +102,46 @@ function initialise(data)
     document.getElementById('presch_txt').innerHTML = (info['presch_txt'] == 'undefined') ? translations['H60'] : info['presch_txt'];
     document.getElementById('lang_txt').innerHTML = (info['lang_txt'] == 'undefined') ? translations['H60'] : info['lang_txt'];
     document.getElementById('neighbours_txt').innerHTML = (info['neighbours_txt'] == 'undefined') ? translations['H60'] : info['neighbours_txt'];
+    //alert(info['neighbours_txt'].split(',').length);
     document.getElementById('enrol_txt').innerHTML = (info['enrol_txt'] == 'undefined') ? translations['H60'] : info['enrol_txt'];
-    document.getElementById('source_txt').innerHTML = translations['H61'];// Source
+    document.getElementById('source_txt').innerHTML = translations['H127'].replace("{YEAR}","2012-2013");// Source
   } else {
     document.report_form.sch_txt.value = info['sch_txt'];//Category + Enrolment Schools
     document.report_form.presch_txt.value = info['presch_txt']; // Gender
     document.report_form.enrol_txt.value = info['enrol_txt']; //Preschool
     document.report_form.lang_txt.value = info['lang_txt']; // Moi & MT schools
     document.report_form.neighbours_txt.value = info['neighbours_txt']; // Neighbours
-    document.report_form.source_txt.value = translations['H61'];// Source
+    //alert(info['neighbours_txt'].split(',').length);
+    document.report_form.source_txt.value = translations['H61'].replace("{YEAR}","2012-2013"); // Source
   }
 }
 
 function neighbours_sch_Chart() {
-
+  document.getElementById('neighbourssch').style.height=String(info['neighbours_txt'].split(',').length*43)+'px';
       // Create our data table.
       var data = new google.visualization.DataTable();
       var colors = [];
       var max = 0
       data.addColumn('string', translations['H6']);
       data.addColumn('number', translations['H11']);
+      data.addColumn({type:'string', role:'annotation'});
       for (var key in info["neighbours_sch"]){
           count = parseInt(info["neighbours_sch"][key]['schcount'])
-          data.addRow([key, count]);
+          data.addRow([key, count, String(count)+' Schools']);
           if (count > max) max = count;
           if (key == info['const_name']){
-            colors.push('31A354')
+            colors.push('#31A354')
           } else {
-            colors.push('BAE4B3')
+            colors.push('#BAE4B3')
           }
       }
       /*var chartn8 = new google.visualization.BarChart(document.getElementById('neighbourssch'));
       chartn8.draw(data, {width: 500, height: 200, title: translations['H41'],colors:['006D2C','31A354','74C476','BAE4B3','EDF8E9'],legend:'none'});*/
       colors = colors.join('|');
       
-      var vis = new google.visualization.ImageChart(document.getElementById('neighbourssch'));
+      var vis = new google.visualization.BarChart(document.getElementById('neighbourssch'));
       var options = {
+          'chartArea': {'left':'200','right':'0','height': '80%'},
           chbh: 'r,1.5,0.5',
           chs: '450x200',
           cht: 'bhs',
@@ -121,6 +153,8 @@ function neighbours_sch_Chart() {
           chxs:'3,000000,12,0,t',
           chts: '000000,12,l',
           chds:'0,'+max,
+//          colors:['#31A354'],
+          //chds: '1|2|3',
           legend: 'none'
         };
       vis.draw(data, options);
@@ -130,34 +164,38 @@ function neighbours_sch_Chart() {
 }
 
 function neighbours_gendsch_Chart() {
+  document.getElementById('neighboursgendsch').style.height=String(info['neighbours_txt'].split(',').length*43)+'px';
+  //alert(info['neighbours_txt'].split(',').length*43);
   if(info["neighbours_gendsch_hasdata"] != 0) {
       // Create our data table.
-      var colors1 = []
-      var colors2 = []
-      var max = 0
+      var colors1 = [];
+      var colors2 = [];
+      var max = 0;
       var data = new google.visualization.DataTable();
       data.addColumn('string', translations['H6']);
       data.addColumn('number', translations['H27']);
+      data.addColumn({type:'string', role:'annotation'});
       data.addColumn('number', translations['H28']);
+      data.addColumn({type:'string', role:'annotation'});
       for (var key in info["neighbours_sch"]){
-          data.addRow([key, parseInt(info["neighbours_sch"][key]['Boy']),parseInt(info["neighbours_sch"][key]['Girl'])]);
+          data.addRow([key, parseInt(info["neighbours_sch"][key]['Boy']), info["neighbours_sch"][key]['Boy']+' Boy',parseInt(info["neighbours_sch"][key]['Girl']), info["neighbours_sch"][key]['Girl']+' Girl']);
           count = parseInt(info["neighbours_sch"][key]['Boy'])
           if (count > max) max = count;
           count = parseInt(info["neighbours_sch"][key]['Girl'])
           if (count > max) max = count;
-
           if (key == info['const_name']){
-            colors1.push('E35804')
-            colors2.push('31A354')
+            colors1.push('#E35804');
+            colors2.push('#31A354');
           } else {
-            colors1.push('F3B590')
-            colors2.push('BAE4B3')
+            colors1.push('#F3B590');
+            colors2.push('#BAE4B3');
           }
       }
       colors1 = colors1.join('|');
       colors2 = colors2.join('|');
-      var vis = new google.visualization.ImageChart(document.getElementById('neighboursgendsch'));
+      var vis = new google.visualization.BarChart(document.getElementById('neighboursgendsch'));
       var options = {
+          'chartArea': {'left':'200','right':'0','height': '80%'},
           chbh: 'r,0.5,1.5',
           chxt: 'y',
           chs: '450x200',
@@ -167,6 +205,7 @@ function neighbours_gendsch_Chart() {
           chm:'N ** boys,000000,0,-1,11|N ** girls,000000,1,-1,11',
           chxs:'3,000000,12,0,t',
           chds:'0,'+max+',0,'+max,
+          //colors:['#E35804','#31A354'],
           legend: 'none'
       }
       vis.draw(data, options);
@@ -328,7 +367,7 @@ function enrol_sch_Chart() {
 }
 
 function enrol_presch_Chart() {
-  if(info["enrol_presch_hasdata"] != 0) {
+ /* if(info["enrol_presch_hasdata"] != 0) {
       // Create our data table.
       var data = new google.visualization.DataTable();
       data.addColumn('string', translations['H47']);
@@ -341,7 +380,7 @@ function enrol_presch_Chart() {
       table10.draw(data, {width: 400});
       var chart9 = new google.visualization.BarChart(document.getElementById('enrolpresch'));
       chart9.draw(data, {width: 400, height: 100, title: translations['H31'],colors:['006D2C','31A354','74C476','BAE4B3','EDF8E9'],legend:'none'});
-  }
+  }*/
 }
 
 function moi_sch_Chart() {
@@ -351,6 +390,7 @@ function moi_sch_Chart() {
       data.addColumn('string', translations['H48']);
       data.addColumn('number', translations['H11']);
       for (var key in info["moi_sch_tb"]){
+          //alert(translations[key]);
           data.addRow([translations[key] + translations['H50'], parseInt(info["moi_sch_tb"][key])]);
       }
       data.sort([{column:1,desc:true}]);
@@ -385,18 +425,19 @@ function gend_sch_Chart() {
       data.addColumn('string', translations['H24']);
       data.addColumn('number', translations['H49']);
       data.addRows([
-        [translations['H27'], info["gend_sch_tb"]["Boy"]],
-        [translations['H28'], info["gend_sch_tb"]["Girl"]],
+        [translations['H58'], info["gend_sch_tb"]["Boy"]],
+        [translations['H59'], info["gend_sch_tb"]["Girl"]],
       ]);
       var table2 = new google.visualization.Table(document.getElementById('gendsch_tb'));
       table2.draw(data,{width:350, height: 120});
-      var chart1 = new BarsOfStuff(document.getElementById('gendsch'));
-      chart1.draw(data, {width:350, height: 240, title:translations['H26']});
+      var chart1 = new google.visualization.BarChart(document.getElementById('gendsch'));
+      //var chart1 = new BarsOfStuff(document.getElementById('gendsch'));
+      chart1.draw(data, {width:350, height: 240, hAxis:{minValue:0},chartArea: {'left':'100','right':'10'}, title:translations['H26'],legend:'none',colors:['006D2C']});
   }
 }
 
 function gend_presch_Chart() {
-  if(info["gend_presch_hasdata"] != 0) {
+  /*if(info["gend_presch_hasdata"] != 0) {
       // Create our data table.
       var data = new google.visualization.DataTable();
       data.addColumn('string', translations['H24']);
@@ -409,11 +450,11 @@ function gend_presch_Chart() {
       table3.draw(data,{width:350, height: 120});
       var chart2 = new BarsOfStuff(document.getElementById('gendpresch'));
       chart2.draw(data, {width:350, height: 240, title:translations['H25']});
-  }
+  }*/
 }
 
 function mt_presch_Chart() {
-  if(info["mt_presch_hasdata"] != 0) {
+ /* if(info["mt_presch_hasdata"] != 0) {
       // Create our data table.
       var data = new google.visualization.DataTable();
       data.addColumn('string', translations['H39']);
@@ -426,11 +467,11 @@ function mt_presch_Chart() {
       table4.draw(data,{width: 400});
       var chart3 = new google.visualization.PieChart(document.getElementById('mtpresch'));
       chart3.draw(data, {width: 400, height: 200, title: translations['H38'],colors: ['006D2C','31A354','74C476','BAE4B3','EDF8E9']});
-  }
+  }*/
 }
 
 function mt_sch_Chart() {
-  if(info["mt_sch_hasdata"] != 0) {
+ /* if(info["mt_sch_hasdata"] != 0) {
       // Create our data table.
       var data = new google.visualization.DataTable();
       data.addColumn('string', translations['H39']);
@@ -443,5 +484,5 @@ function mt_sch_Chart() {
       table5.draw(data,{width: 400});
       var chart4 = new google.visualization.PieChart(document.getElementById('mtsch'));
       chart4.draw(data, {width: 400, height: 240, title:  translations['H37'], colors: ['006D2C','31A354','74C476','BAE4B3','EDF8E9']});
-  }
+  }*/
 }

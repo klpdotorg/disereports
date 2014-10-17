@@ -26,6 +26,9 @@ class Learning:
     elif cons_type == 3:
       data["const_type"]='Corporator'
       constype = "corporator"
+    elif cons_type == 4:
+      data["const_type"]='Boundary'
+      constype = 'boundary'
     data["const_name"]=str(constid[0])
 
     data.update(self.constituencyData(constype,constid))

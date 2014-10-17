@@ -27,9 +27,23 @@ function isEmpty(ob){
       
 function initialise(data)
 {
-
   info = data;
-  translations = info['transdict']
+  consttype=info["const_type"];
+  translations = info['transdict'];
+  translations['H40']=translations['H126'];
+  if(consttype == 'block_name'){
+     info["const_type"]='BLOCK';
+     translations['H40']=translations['H124'];
+  }
+  else if(consttype == 'cluster_name'){
+     info["const_type"]='CLUSTER';
+     translations['H40']=translations['H125'];
+  }
+  else if(consttype == 'district'){
+     info["const_type"]='DISTRICT';
+     translations['H40']=translations['H123'];
+  }
+  consttype=info["const_type"];
   now = new Date()
   document.getElementById("reportdate").innerHTML = now.toDateString();
   document.getElementById("rephead").innerHTML = "<img src=\'/images/KLP_logo2.png\' width='130px' vertical-align='top' border=0 />" + '<br/>' + translations['H56'];
@@ -39,7 +53,31 @@ function initialise(data)
   document.getElementById("mntnchead").innerHTML = 'Allocation for Maintenance'; //translations['H36'];*/
   document.getElementById("neighhead").innerHTML = translations['H68'];
 
-  document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
+ document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"
+                                                 + info['const_name'] + "</h1>";
+  constinfo =  "<dl class='header-def'><dt>";
+  if(consttype=='MP Constituency' || consttype=='MLA Constituency' || consttype=='Ward'){
+    constinfo = constinfo + "<dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
+                                                 + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
+                                                + "<dt>" + translations['H10'] + "</dt><dd>" + info["const_party"] + "</dd>";
+  }
+  else if(consttype=='BLOCK' || consttype=='PROJECT'){
+    constinfo =constinfo  + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>";
+  }
+  else if(consttype=='CLUSTER' || consttype=='CIRCLE'){
+    constinfo = constinfo + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>"
+                                                + "<dt>" + translations["BLOCK"] + "</dt><dd>" + info["const_blck"] + "</dd>";
+  }
+  document.getElementById("constinfo").innerHTML = constinfo + "</dl>";;
+  document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
+          '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
+          '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
+          '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
+
+
+
+
+/*  document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
                                                  + info['const_name'] + "</h1>";
   document.getElementById("constinfo").innerHTML =  "<dl class='header-def'><dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
                                                 + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
@@ -48,8 +86,8 @@ function initialise(data)
   document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
           '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
           '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
-          '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
-  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt style="font-size:9pt">' + translations['H11'] + '</dt><dd style="font-size:9pt">' + info["inst_counts"]["abs_schcount"] + '<dt style="font-size:9pt">' + translations['H72'] + '</dt><dd style="font-size:9pt">' + info["inst_counts"]["fin_schcount"] +'</dd></dl>';
+          '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;*/
+  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt style="font-size:9pt">' + translations['H11'] + '</dt><dd style="font-size:9pt">' + info["inst_counts"]["abs_schcount"]  + /*'<dt style="font-size:9pt">' + translations['H72'] + '</dt><dd style="font-size:9pt">' + info["inst_counts"]["fin_schcount"] +'</dd>*/ '</dl>';
   if(parseInt(info["inst_counts"]["abs_schcount"]) != 0){
     neighbours_Chart();
     annual_Chart();
@@ -61,12 +99,13 @@ function initialise(data)
     document.getElementById('annual_txt').innerHTML = (info['annual_txt'] == 'undefined') ? translations['H60'] : info['annual_txt'];
     document.getElementById('mtnc_txt').innerHTML = (info['mtnc_txt'] == 'undefined') ? translations['H60'] : info['mtnc_txt'];
     document.getElementById('neighbours_txt').innerHTML = (info['neighbours_txt'] == 'undefined') ? translations['H60'] : info['neighbours_txt'];
-    document.getElementById('source_txt').innerHTML = (info['source_txt'] == 'undefined') ? translations['H60'] : info['source_txt'];
+    document.getElementById('source_txt').innerHTML = (info['source_txt'] == 'undefined') ? translations['H60'] : info['source_txt'].replace("{YEAR}","2012-2013");
   }
 }
 
 function neighbours_Chart() {
-
+      document.getElementById('neighboursdata').style.height=String(info['neighbours_txt'].split(',').length*30)+'px';
+      //alert(document.getElementById('neighboursdata').style.height);
       // Create our data table.
       var data = new google.visualization.DataTable();
       var chartdata = new google.visualization.DataTable();
@@ -79,7 +118,7 @@ function neighbours_Chart() {
       data.addColumn('string', 'Total');
       chartdata.addColumn('string', translations['H6']);
       chartdata.addColumn('number', 'Total');
-      chartdata.addColumn('string', 'Label');
+      chartdata.addColumn({type:'string', role:'annotation'});
       if (isEmpty(info["neighbours_grant"]) == false ) {
         for (var key in info["neighbours_grant"]){
             tlm = parseInt(info["neighbours_grant"][key]['tlm'])
@@ -87,18 +126,20 @@ function neighbours_Chart() {
             mntnc = parseInt(info["neighbours_grant"][key]['mntnc'])
             data.addRow([key, ConvertToIndian(tlm),ConvertToIndian(annual),ConvertToIndian(mntnc), ConvertToIndian(tlm+annual+mntnc)]);
             count = tlm + annual + mntnc
-            chartdata.addRow([key.replace('BANGALORE','B. '), count,ConvertToIndian(count)]);
+            chartdata.addRow([key.replace('BANGALORE','B. '), count, 'Rs '+String(count)]);
+
             if (count > max) max = count;
             if (key == info['const_name']){
-              colors.push('31A354')
+              colors.push('#31A354')
             } else {
-              colors.push('BAE4B3')
+              colors.push('#BAE4B3')
             }
         }
         colors = colors.join('|');
 
-        var vis = new google.visualization.ImageChart(document.getElementById('neighboursdata'));
+        var vis = new google.visualization.BarChart(document.getElementById('neighboursdata'));
         var options = {
+            'chartArea':{'right':'0','left':'200','height':'100%'},
             chbh: 'r,1.5,0.5',
             chs: '350x160',
             cht: 'bhs',

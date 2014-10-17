@@ -4,12 +4,12 @@ import traceback
 import sys, os,traceback
 from operator import itemgetter
 import db.KLPDB
-import db.Queries
+import db.Queries_dise
 from utils.CommonUtil import CommonUtil
 
 #connection = db.KLPDB.getConnection()
 #cursor = connection.cursor()
-cursor = db.KLPDB.getWebDbConnection()
+cursor = db.KLPDB.getWebDbConnection1()
 
 class Demographics:
 
@@ -25,13 +25,25 @@ class Demographics:
     elif cons_type == 3:
       data["const_type"]='Corporator'
       constype = "corporator"
+    elif cons_type == 4:
+      data["const_type"]='District'
+      constype = "district"
+    elif cons_type == 5:
+      data["const_type"]='Block'
+      constype = "block"
+    elif cons_type == 6:
+      data["const_type"]='Cluster'
+      constype = "cluster"
     data["const_name"]=str(constid[0])
 
-    queries = ['gend_sch','gend_presch']
+    queries = ['gend_sch']
+    #,'gend_presch']
     data.update(self.genderGraphs(constype,constid,queries))
-    queries = ['mt_sch','mt_presch']
-    data.update(self.mtGraphs(constype,constid,queries))
-    queries = ['moi_sch','cat_sch','enrol_sch','enrol_presch']
+    #queries = ['mt_sch']
+    #,'mt_presch']
+    #data.update(self.mtGraphs(constype,constid,queries))
+    queries = ['moi_sch','cat_sch','enrol_sch']
+    #,'enrol_presch']
     data.update(self.pieGraphs(constype,constid,queries))
     data.update(self.constituencyData(constype,constid))
     return data
@@ -40,7 +52,7 @@ class Demographics:
   def genderGraphs(self,constype,constid,qkeys):
     data = {}
     for querykey in qkeys:
-      result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+      result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
       chartdata ={}
       for row in result:
         chartdata[str(row.sex.strip())] = int(row.sum)
@@ -56,7 +68,7 @@ class Demographics:
   def mtGraphs(self,constype,constid,qkeys):
     data = {}
     for querykey in qkeys:
-      result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+      result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
       tabledata = {}
       invertdata = {}
       order_lst = []
@@ -85,7 +97,7 @@ class Demographics:
   def pieGraphs(self,constype,constid,qkeys):
     data = {}
     for querykey in qkeys:
-      result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+      result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
       tabledata = {}
       for row in result:
         tabledata[str(row.a1.strip().title())] = str(int(row.a2))
@@ -116,35 +128,36 @@ class Demographics:
         neighbours_sch = {}
         neighbours_presch = {}
         
-        result = cursor.query(db.Queries.getDictionary(constype)[constype_str + '_neighbour_sch'], {'s':tuple(neighbours)})
+        result = cursor.query(db.Queries_dise.getDictionary(constype)[constype_str + '_neighbour_sch'], {'s':tuple(neighbours)})
         for row in result:
           neighbours_sch[row.const_ward_name.strip()]={'schcount':str(row.count)}
 
-        result = cursor.query(db.Queries.getDictionary(constype)[constype_str + '_neighbour_presch'], {'s':tuple(neighbours)})
-        for row in result:
-          neighbours_presch[row.const_ward_name.strip()] = {'preschcount':str(row.count)}
-         
-        result = cursor.query(db.Queries.getDictionary(constype)[constype_str + '_neighbour_gendsch'],{'s':tuple(neighbours)})
+        #result = cursor.query(db.Queries_dise.getDictionary(constype)[constype_str + '_neighbour_presch'], {'s':tuple(neighbours)})
+        #for row in result:
+        #neighbours_presch[row.const_ward_name.strip()] = 0 #{'preschcount':str(row.count)}
+        
+        result = cursor.query(db.Queries_dise.getDictionary(constype)[constype_str + '_neighbour_gendsch'],{'s':tuple(neighbours)})
         for row in result:
           neighbours_sch[row.const_ward_name.strip()][row.sex.strip()] = str(row.sum)
         
-        result = cursor.query(db.Queries.getDictionary(constype)[constype_str + '_neighbour_gendpresch'],{'s':tuple(neighbours)})
-        for row in result:
-          neighbours_presch[row.const_ward_name.strip()][row.sex.strip()] = str(row.sum)
-        
+        #result = cursor.query(db.Queries_dise.getDictionary(constype)[constype_str + '_neighbour_gendpresch'],{'s':tuple(neighbours)})
+        #for row in result:
+             #neighbours_presch[row.const_ward_name.strip()][row.sex.strip()] = str(row.sum)
+        #neighbours_presch[row.const_ward_name.strip()]['Boys'] = 0 #str(row.sum)
+        #neighbours_presch[row.const_ward_name.strip()]['Girls'] = 0 #str(row.sum)
+
         if len(neighbours_sch.keys()) > 0: 
-          data["neighbours_sch"] = neighbours_sch          
+          data["neighbours_sch"] = neighbours_sch      
         else:
           data["neighbours_sch_hasdata"] = 0
 
         if len(neighbours_presch.keys()) > 0: 
-          data["neighbours_presch"] = neighbours_presch          
+          data["neighbours_presch"] = neighbours_presch  
         else:
           data["neighbours_presch_hasdata"] = 0
       else:
         data["neighbours_sch_hasdata"] = 0
         data["neighbours_presch_hasdata"] = 0
-
       return data
     except:
       print "Unexpected error:", sys.exc_info()

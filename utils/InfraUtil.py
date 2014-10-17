@@ -3,8 +3,7 @@ import traceback
 
 import sys, os,traceback
 
-def getInfraText(data,lang):
-
+def getInfraText(data,lang,constype):
     transDict = {}
     f = open(os.path.join(os.getcwd(),'translations/infra_translations_text.csv'),'r')
     for line in f.readlines():
@@ -13,6 +12,15 @@ def getInfraText(data,lang):
         transDict[str(text[0])] = text[1]
       else:
         transDict[str(text[0])] = text[2]
+    if constype == 4:
+       transDict['1']=transDict['22']
+       transDict['19']=transDict['28']
+    elif constype == 5:
+       transDict['1']=transDict['23']
+       transDict['19']=transDict['29']
+    elif constype == 6:
+       transDict['1']=transDict['24']
+       transDict['19']=transDict['30']
     intro_txt_str=transDict['1'] 
     ang_infra_txt_str=transDict['17']
     dise_facility_txt_str=transDict['17']
@@ -27,7 +35,7 @@ def getInfraText(data,lang):
     data['note_txt'] = note_txt_str 
     data['conclusion_txt'] = conclusion_txt_str
 
-    if int(data["infra_count"]) > 0:
+    """if int(data["infra_count"]) > 0:
       ang_infra_txt_str = transDict['2'] + str(data["infra_count"]) +  transDict['3'] + str(data["inst_counts"]["abs_preschcount"]) + transDict['4'] 
       for each in data["ang_infra"]:
         keys = data["ang_infra"][each].keys()
@@ -37,7 +45,7 @@ def getInfraText(data,lang):
           #else:
           data["ang_infra"][each][transDict[key]] = [data["ang_infra"][each][key][0],data["ang_infra"][each][key][1]]
           del data["ang_infra"][each][key]
-    data["ang_infra_txt"] = ang_infra_txt_str
+    data["ang_infra_txt"] = ang_infra_txt_str"""
 
     if int(data["dise_count"]) > 0:
       dise_facility_txt_str = transDict['5'] + str(data["dise_count"]) +  transDict['6'] + str(data["inst_counts"]["abs_schcount"]) + transDict['7'] 
@@ -77,27 +85,29 @@ def getInfraText(data,lang):
         #else:
         newDict[keys[0] +'|' + transStr[1]] = data["neighbours_anginfra"][each]
       data["neighbours_anginfra"] = newDict
-    
     if("neighbours_dise" in data.keys()):
       newDict = {}
+      #print data["neighbours_dise"]
       for each in data["neighbours_dise"].keys():
         keys = each.split('|')
         transStr = transDict[keys[1]].split(';')
+        #print transDict[keys[1]]
         if keys[1] in ['classroom_repair']:
           newInnerDict ={}
           for const in data["neighbours_dise"][each].keys():
             newInnerDict[const] = str(100-int(data["neighbours_dise"][each][const]))
-          newDict[keys[0] +'|' + transStr[1]] = newInnerDict
+          newDict[keys[0] +'|' + transStr[1].decode('utf-8')] = newInnerDict
         else:
-          newDict[keys[0] +'|' + transStr[1]] = data["neighbours_dise"][each]
+          newDict[keys[0] +'|' + transStr[1].decode('utf-8')] = data["neighbours_dise"][each]
       data["neighbours_dise"] = newDict
       
       
       neighbours = data["neighbours_dise"][data["neighbours_dise"].keys()[0]].keys()
       if neighbours:
         neighbours.remove(data['const_name'])
-        neighbours_txt_str = '<br/>' + data['const_name'] + ' ' + transDict['19'] + ', '.join(neighbours) + '. ' + transDict['20']
+        neighbours_txt_str = '<br/>' + str(data['const_name']) + ' ' + transDict['19'] + ', '.join([str(x) for x in neighbours]) + '. ' + transDict['20']
     data['neighbours_txt'] = neighbours_txt_str 
+    print "hello"
     return data
 
 def formatIndian(inputNum) :

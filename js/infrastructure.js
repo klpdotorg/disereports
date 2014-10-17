@@ -29,7 +29,23 @@ function initialise(data)
 {
 
 info = data;
-translations = info['transdict'];
+  consttype=info["const_type"];
+  translations = info['transdict'];
+  translations['H40']=translations['H126'];
+  if(consttype == 'block_name'){
+     info["const_type"]='BLOCK';
+     translations['H40']=translations['H124'];
+  }
+  else if(consttype == 'cluster_name'){
+     info["const_type"]='CLUSTER';
+     translations['H40']=translations['H125'];
+  }
+  else if(consttype == 'district'){
+     info["const_type"]='DISTRICT';
+     translations['H40']=translations['H123'];
+  }
+  consttype=info["const_type"];
+average='State Avg';
 now = new Date()
 document.getElementById("reportdate").innerHTML = now.toDateString();
 document.getElementById("rephead").innerHTML = "<img src=\'/images/KLP_logo2.png\' width='130px' vertical-align='top' border=0 />" + '<br/>' + translations['H56'];
@@ -39,7 +55,31 @@ document.getElementById("schoolhead").innerHTML = translations['H79'];
 //document.getElementById("notehead").innerHTML = translations['H81'];
 document.getElementById("neighhead").innerHTML = translations['H40'];
 
-document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
+ document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"
+                                                 + info['const_name'] + "</h1>";
+  constinfo =  "<dl class='header-def'><dt>";
+  if(consttype=='MP Constituency' || consttype=='MLA Constituency' || consttype=='Ward'){
+    constinfo = constinfo + "<dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
+                                                 + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
+                                                + "<dt>" + translations['H10'] + "</dt><dd>" + info["const_party"] + "</dd>";
+  }
+  else if(consttype=='BLOCK' || consttype=='PROJECT'){
+    constinfo =constinfo  + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>";
+    average=info["const_dist"][0].toUpperCase()+info["const_dist"].substr(1).toLowerCase()+' Avg';
+  }
+  else if(consttype=='CLUSTER' || consttype=='CIRCLE'){
+    constinfo = constinfo + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>"
+                                                + "<dt>" + translations["BLOCK"] + "</dt><dd>" + info["const_blck"] + "</dd>";
+    average=info["const_blck"][0].toUpperCase()+info["const_blck"].substr(1).toLowerCase()+' Avg';
+  }
+  document.getElementById("constinfo").innerHTML = constinfo + "</dl>";;
+  document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
+          '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
+          '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
+          '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
+
+
+/*document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
                                                + info['const_name'] + "</h1>";
 document.getElementById("constinfo").innerHTML =  "<dl class='header-def'><dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
                                               + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
@@ -48,11 +88,17 @@ document.getElementById("constinfo").innerHTML =  "<dl class='header-def'><dt>" 
 document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
         '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
         '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
-        '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
-document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt style="font-size:9pt">' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["abs_schcount"] + '<dt style="font-size:9pt">' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["abs_preschcount"] +'</dd></dl>';
+        '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;*/
+//document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt style="font-size:9pt">' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["abs_schcount"] + '<dt style="font-size:9pt">' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["abs_preschcount"] +'</dd></dl>';
+
+var show_counts = '<dl class="header-def">';
 
 if(parseInt(info["inst_counts"]["abs_schcount"]) != 0){
+   show_counts = show_counts + '<dt style="font-size:9pt">' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["abs_schcount"] + '</dd>'
+}
 
+if(parseInt(info["inst_counts"]["abs_schcount"]) != 0){
+//  show_counts = show_counts + '<dt style="font-size:9pt">' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["abs_preschcount"] +'</dd>';
   ang_infra_table();
   dise_facility_table();
   //lib_status_chart();
@@ -65,12 +111,15 @@ if(parseInt(info["inst_counts"]["abs_schcount"]) != 0){
   document.getElementById('dise_facility_txt').innerHTML = (info['dise_facility_txt'] == 'undefined') ? translations['H60'] : info['dise_facility_txt'];
   //document.getElementById('lib_txt').innerHTML = (info['lib_infra_txt'] == 'undefined') ? translations['H60'] : info['lib_infra_txt'];
   //document.getElementById('neighbours_txt').innerHTML = (info['neighbours_txt'] == 'undefined') ? translations['H60'] : info['neighbours_txt'];
-  document.getElementById('source_txt').innerHTML = (info['source_txt'] == 'undefined') ? translations['H60'] : info['source_txt'];
+  document.getElementById('source_txt').innerHTML = (info['source_txt'] == 'undefined') ? translations['H60'] : info['source_txt'].replace("{YEAR}","2012-2013");
   document.getElementById('note_txt').innerHTML = (info['note_txt'] == 'undefined') ? translations['H60'] : info['note_txt'];
   document.getElementById('neighbours_txt').innerHTML = (info['neighbours_txt'] == 'undefined') ? translations['H60'] : info['neighbours_txt'];
   document.getElementById('conclusion_txt').innerHTML = (info['conclusion_txt'] == 'undefined') ? translations['H60'] : info['conclusion_txt'];
 }
+document.getElementById('instcounts').innerHTML = show_counts + '</dl>';
+
 }
+
 
 function neighbours_anginfra() {
    // Create our data table.
@@ -295,7 +344,8 @@ function ConvertToIndian(inputString,colour_code) {
       if (!isNaN(suf)) outputString += '.' + suf; 
       if(colour_code) {
         outputString = cc_str + outputString + '</span>%' 
-        outputString = outputString + '<span style="font-size:8pt">&nbsp;&nbsp;&nbsp;' + translations['Bangalore Avg'] + ': ' + bm + '%</span></span>';
+        //outputString = outputString + '<span style="font-size:8pt">&nbsp;&nbsp;&nbsp;' + translations['Bangalore Avg'] + ': ' + bm + '%</span></span>';
+        outputString = outputString + '<span style="font-size:8pt">&nbsp;&nbsp;&nbsp;' + average + ': ' + bm + '%</span></span>';
         return outputString; 
       } else {
         return outputString; 

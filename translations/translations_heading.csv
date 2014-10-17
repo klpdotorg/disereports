@@ -1,4 +1,4 @@
-﻿01|Karnataka Learning Partnership|ಕರ್ನಾಟಕ ಕಲಿಕಾ ಸಹಭಾಗಿತ್ವ 
+1|Karnataka Learning Partnership|ಕರ್ನಾಟಕ ಕಲಿಕಾ ಸಹಭಾಗಿತ್ವ 
 2|MLA|ವಿದಾನ ಸಭಾ ಶಾಸಕರು
 3|MP|ಲೋಕ ಸಭಾ ಸದಸ್ಯರು
 4|Corporator|ನಗರ ಪಾಲಿಕೆಯ ಸದಸ್ಯರು
@@ -65,7 +65,7 @@
 65|Annual School Grant breakdown|ವಾರ್ಷಿಕ  ಶಾಲಾ ಅನುದಾನದ ವಿವರ
 66|Allocation Summary|ಅನುದಾನ  ಹಂಚಿಕೆಯ ಸಾರಾಂಶ
 67|Allocation Breakdown|ಅನುದಾನ  ಹಂಚಿಕೆಯ ವಿವರ
-68|Allocation in Neighbours Constituencies|ನೆರೆಹೊರೆಯ ವಿಧಾನ ಸಭಾ ಕ್ಷೇತ್ರಗಳ  ಅನುದಾನ  ಹಂಚಿಕೆಯ ವಿವರ
+68|<br><br>Allocation in Neighbours Constituencies|<br><br>ನೆರೆಹೊರೆಯ ವಿಧಾನ ಸಭಾ ಕ್ಷೇತ್ರಗಳ  ಅನುದಾನ  ಹಂಚಿಕೆಯ ವಿವರ
 69|Grant Amount|ಅನುದಾನದ  ಮೊತ್ತ 
 70|Number of Classrooms|ಪಾಠದ ಕೊಠಡಿಗಳ ಸಂಖ್ಯೆ 
 71|Grant Type|ಅನುದಾನದ  ವರ್ಗ
@@ -118,3 +118,15 @@
 119|Insufficient information for this constituency to display Kannada reading levels.|ಕನ್ನಡ ಓದುವ ಮಟ್ಟಗಳ ವಿವರಣೆಗಾಗಿ ಈ ಲೋಕ/ವಿಧಾನಸಭಾ ಕ್ಷೇತ್ರದಲ್ಲಿ ಸಾಕಷ್ಟು ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ .
 120|Insufficient information for this constituency to display details of the Anganwadi assessment.|ಅಂಗನವಾಡಿ ಮೌಲ್ಯಮಾಪನ ವಿವರಣೆಗಾಗಿ ಈ ಲೋಕ/ವಿಧಾನಸಭಾ ಕ್ಷೇತ್ರದಲ್ಲಿ ಸಾಕಷ್ಟು ಮಾಹಿತಿ ಲಭ್ಯವಿಲ್ಲ.
 121|Summary of Kannada Reading Levels for Bangalore and Karnataka Rural|ಬೆಂಗಳೂರಿನ ಮತ್ತು ಗ್ರಾಮೀಣ ಕರ್ನಾಟಕದ ಕನ್ನಡ ಓದುವ  ಹಂತಗಳ ವಿವರ 
+122|Neighbours Constituency Profile|ನೆರೆಹೊರೆಯ ವಿಧಾನ ಸಭಾ ಕ್ಷೇತ್ರದ ವಿವರ
+123|Neighbours District Profile|ನೆರೆಹೊರೆಯ ಜಿಲ್ಲೆಯ ವಿವರ
+124|Neighbours Block Profile|ನೆರೆಹೊರೆಯ ಬ್ಲಾಕ್‌ನ ವಿವರ
+125|Neighbours Cluster Profile|ನೆರೆಹೊರೆಯ ಕ್ಲಸ್ಟರ್‌ನ ವಿವರ
+126|Neighbours Constituency Profile|ನೆರೆಹೊರೆಯ ವಿಧಾನ ಸಭಾ ಕ್ಷೇತ್ರದ ಶಾಲಾ ವಿವರ
+127|Disclaimer: The source of the data for this report is from the District Information System for Education (DISE) for the academic year {YEAR} collected and published by National University of Educational Planning and Administration and available at www.schoolreportcards.in In addition to this, KLP has processed this data to match constituencies based on GPS coordinates of the schools and other data analytics techniques. While these are not exact, they are the best that can be attained with existing information. See http://klp.org.in/text/disclaimer for more.|ಹಕ್ಕುತ್ಯಾಗ:ಈ ವರದಿಯ ಮಾಹಿತಿಯು ಮೂಲ ಜಿಲ್ಲಾ ಶೈಕ್ಷಣಿಕ ಮಾಹಿತಿ (DISE) -{YEAR} ಇದರಡಿ ಸಂಗ್ರಹಿಸಿದ ಶೈಕ್ಷಣಿಕ ಯೋಜನೆ ಮತ್ತು ಆಡಳಿತ, ರಾಷ್ಟ್ರೀಯ ವಿಶ್ವವಿದ್ಯಾನಿಲಯ ಪ್ರಕಟಿಸಿದ ವರದಿಯಾಗಿದೆ. ಸದರಿ ಮಾಹಿತಿ www.schoolreportcards.in ನಲ್ಲಿ ಲಭ್ಯವಿದೆ. Gps coordinates ಮತ್ತು ಇತರೆ ಮಾಹಿತಿ ವಿಶ್ಲೇಷಣೆ ಮತ್ತು ತಂತ್ರಗಳನ್ನು ಬಳಸಿ ಕೆ. ಎಲ್. ಪಿ (ಕರ್ನಾಟಕ ಕಲಿಕಾ ಸಹಬಾಗಿತ್ವ) ಯವರು ವಿವಿಧ ಕ್ಷೇತ್ರಗಳಿಗೆ ಹೊಂದಿಕೊಳ್ಳುವಂತೆ ಸದರಿ ಮಾಹಿತಿಯನ್ನು ಸಂಸ್ಕರಣೆ ಮಾಡಿರುತ್ತಾರೆ. ಸದರಿ ಮಾಹಿತಿ ಅತ್ಯಂತ ನಿಖರವಾಗಿಲ್ಲದಿದ್ದರೂ, ಲಭ್ಯವಿರುವ ಮಾಹಿತಿಯ ಆಧಾರದ ಮೇಲೆ ಸಂಗ್ರಹಿಸಿರುವ ಉತ್ತಮ ಮಾಹಿತಿಯಾಗಿದೆ. ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ http://klp.org.in/text/disclimer ನೋಡಿ.
+128|District|ಜಿಲ್ಲೆ
+129|Block|ಬ್ಲಾಕ್‌
+130|Cluster|ಕ್ಲಸ್ಟರ್‌
+131|<br><br>Allocation in Neighbours District|<br><br>ನೆರೆಹೊರೆಯ ಜಿಲ್ಲೆಗಳ  ಅನುದಾನ  ಹಂಚಿಕೆಯ ವಿವರ
+132|<br><br>Allocation in Neighbours Block|<br><br>ನೆರೆಹೊರೆಯ ಬ್ಲಾಕ್‌ಗಳ  ಅನುದಾನ  ಹಂಚಿಕೆಯ ವಿವರ
+133|<br><br>Allocation in Neighbours Cluster|<br><br>ನೆರೆಹೊರೆಯ ಕ್ಲಸ್ಟರ್‌ಗಳ  ಅನುದಾನ  ಹಂಚಿಕೆಯ ವಿವರ

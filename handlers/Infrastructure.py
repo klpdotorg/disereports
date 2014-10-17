@@ -4,20 +4,19 @@ import traceback
 import sys, os,traceback
 from operator import itemgetter
 import db.KLPDB
-import db.Queries
+import db.Queries_dise
 from utils.CommonUtil import CommonUtil
 
 #connection = db.KLPDB.getConnection()
 #cursor = connection.cursor()
-cursor = db.KLPDB.getWebDbConnection()
+cursor = db.KLPDB.getWebDbConnection1()
 
 class Infrastructure:
 
   def generateData(self,cons_type, constid):
     data = {}
     avgdata = {}
-    avgdata = self.getAverages()
-
+ 
     constype = "mp"
     if cons_type == 1:
       data["const_type"]='MP'
@@ -28,29 +27,39 @@ class Infrastructure:
     elif cons_type == 3:
       data["const_type"]='Corporator'
       constype = "corporator"
+    elif cons_type == 4:
+      data["const_type"]='District'
+      constype = "district"
+    elif cons_type == 5:
+      data["const_type"]='Block'
+      constype = "block"
+    elif cons_type == 6:
+      data["const_type"]='Cluster'
+      constype = "cluster"
     data["const_name"]=str(constid[0])
 
+    avgdata = self.getAverages(constype,constid)
     data.update(self.constituencyData(constype,constid))
-    data.update(self.getAngInfra(constype,constid,avgdata))
+    #data.update(self.getAngInfra(constype,constid,avgdata))
     data.update(self.getSchoolInfra(constype,constid,avgdata))
     return data
 
-  def getAverages(self):
+  def getAverages(self,constype,constid):
     data = {}
-    querykeys = ['get_dise_count_blore','get_sch_count_blore','get_ai_count_blore','get_ang_count_blore']
+    querykeys = ['get_dise_count_parent','get_sch_count_parent']
     for key in querykeys:
-      result = cursor.query(db.Queries.getDictionary("common_queries")[key])
+      result = cursor.query(db.Queries_dise.getDictionary(constype)[key],{'s':constid})
       for row in result:
         data[key.replace("get_","")] = row.count
-    querykeys = ['get_dise_avg_blore','get_ai_avg_blore']
+    querykeys = ['get_dise_avg_parent']
     for key in querykeys:
       tabledata = {}
-      result = cursor.query(db.Queries.getDictionary("common_queries")[key])
+      result = cursor.query(db.Queries_dise.getDictionary(constype)[key],{'s':constid})
       for row in result:
         if 'dise' in key:
-          tabledata[row.a1] = str(int(row.count) * 100/int(data['dise_count_blore']))
+          tabledata[row.a1] = str(int(row.count) * 100/int(data['dise_count_parent']))
         else:
-          tabledata[row.a1] = str(int(row.count) * 100/int(data['ai_count_blore']))
+          tabledata[row.a1] = str(int(row.count) * 100/int(data['ai_count_parent']))
       data[key.replace("get_","")] = tabledata
     return data
 
@@ -61,13 +70,13 @@ class Infrastructure:
     blore_infra = data['ai_avg_blore']
 
     querykey = 'infra_count'
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     for row in result:
      infra_count = row.count
     data[querykey] = infra_count
 
     querykey = 'ang_infra' 
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     for row in result:
       if row.ai_metric in ['waste_basket','toilet','toilet_roof','akshara_kits']:
         pass
@@ -82,17 +91,17 @@ class Infrastructure:
   def getSchoolInfra(self,constype,constid,data):
     tabledata = {}
 
-    blore_count = data['dise_count_blore']
-    blore_dise = data['dise_avg_blore']
+    blore_count = data['dise_count_parent']
+    blore_dise = data['dise_avg_parent']
 
     querykey = 'dise_count'
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     for row in result:
      dise_count = row.count
     data[querykey] = dise_count
 
     querykey = 'dise_facility' 
-    result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
+    result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':constid})
     for row in result:
       if row.df_metric in ['toilet_all','ramp','medical']:
         pass
@@ -109,23 +118,21 @@ class Infrastructure:
     data = {}
     constype_str = constype
     try:
-      querykey = 'neighbours_df_count'
-      result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':tuple(neighbours)})
-      dise_count = {} 
-      for row in result:
-        dise_count[row.const_ward_name] = int(row.count)
-      data[querykey] = dise_count
-
-      querykey = 'neighbours_ai_count'
-      result = cursor.query(db.Queries.getDictionary(constype)[constype + '_' + querykey],{'s':tuple(neighbours)})
-      infra_count = {} 
-      for row in result:
-        infra_count[row.const_ward_name] = int(row.count)
-      data[querykey] = infra_count
-
       if len(neighbours) > 0:
+        querykey = 'neighbours_df_count'
+        result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':tuple(neighbours)})
+        dise_count = {} 
+        for row in result:
+          dise_count[row.const_ward_name] = int(row.count)
+        data[querykey] = dise_count
+        """querykey = 'neighbours_ai_count'
+        result = cursor.query(db.Queries_dise.getDictionary(constype)[constype + '_' + querykey],{'s':tuple(neighbours)})
+        infra_count = {} 
+        for row in result:
+          infra_count[row.const_ward_name] = int(row.count)
+        data[querykey] = infra_count"""
         crit='neighbours_'
-        query_keys = ['dise','anginfra']
+        query_keys = ['dise']
         for key in query_keys:
           tabledata = {}
           counts_dict = {}
@@ -133,7 +140,7 @@ class Infrastructure:
             counts_dict = dise_count
           else:
             counts_dict = infra_count
-          result = cursor.query(db.Queries.getDictionary(constype)[constype_str+'_'+crit+key], {'s':tuple(neighbours)})
+          result = cursor.query(db.Queries_dise.getDictionary(constype)[constype_str+'_'+crit+key], {'s':tuple(neighbours)})
           for row in result:
             if row.a1 in ['waste_basket','toilet','toilet_roof','akshara_kits','toilet_all','ramp','medical']:
               pass
@@ -142,7 +149,6 @@ class Infrastructure:
                   tabledata[row.const_ward_name.strip()][row.a2 + '|' + row.a1] = int(row.count)*100/counts_dict[row.const_ward_name.strip()]
               else:
                 tabledata[row.const_ward_name.strip()]={row.a2+'|'+ row.a1:int(row.count)*100/counts_dict[row.const_ward_name.strip()]}
-
           newtable = {}
 
           for tabkey in tabledata.keys():
@@ -154,8 +160,6 @@ class Infrastructure:
               else:
                 newtable.update({ each:{tabkey:moddata[each]}})
           data[crit+key] = newtable
-
-
       return data
     except:
       print 'Error occurred'

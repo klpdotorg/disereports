@@ -1,6 +1,7 @@
 .treeview ul{ /*CSS for Simple Tree Menu*/
 margin: 0;
 padding: 0;
+font-size: 16px;
 }
 
 .treeview li{ /*Style for LI elements in general (excludes an LI that contains sub lists)*/
@@ -8,6 +9,7 @@ background: url(/images/treemenu/list.png) no-repeat left center;
 list-style-type: none;
 padding-left: 22px;
 margin-bottom: 3px;
+font-size: 16px;
 }
 
 .treeview li.submenu{ /* Style for LI that contains sub lists (other ULs). */

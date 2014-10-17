@@ -35,12 +35,37 @@ function logslider(position) {
 function initialise(data)
 {
   info = data;
+  consttype=info["const_type"];
   translations = info['transdict'];
   now = new Date()
   document.getElementById("reportdate").innerHTML = now.toDateString();
   document.getElementById("rephead").innerHTML = "<img src=\'/images/KLP_logo2.png\' width='130px' vertical-align='top' border=0 />" + '<br/>' + translations['H56'];
 
-  document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
+document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"
+                                                 + info['const_name'] + "</h1>";
+  constinfo =  "<dl class='header-def'><dt>";
+  if(consttype=='MP Constituency' || consttype=='MLA Constituency' || consttype=='Ward'){
+    constinfo = constinfo + "<dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
+                                                 + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
+                                                + "<dt>" + translations['H10'] + "</dt><dd>" + info["const_party"] + "</dd>";
+  }
+  else if(consttype=='BLOCK' || consttype=='PROJECT'){
+    constinfo =constinfo  + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>";
+  }
+  else if(consttype=='CLUSTER' || consttype=='CIRCLE'){
+    constinfo = constinfo + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>"
+                                                + "<dt>" + translations["BLOCK"]+"/"+translations["PROJECT"] + "</dt><dd>" + info["const_blck"] + "</dd>";
+  }
+  document.getElementById("constinfo").innerHTML = constinfo + "</dl>";;
+  document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
+          '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
+          '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
+          '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
+  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt>' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["schcount"] + '</dd>'
+                                                  + '<dt>' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["preschcount"] + '</dd></dl>';
+
+
+/*  document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
                                                + info['const_name'] + "</h1>";
   document.getElementById("constinfo").innerHTML =  "<dl class='header-def'><dt>" + translations['H8'] + "</dt><dd>"
                            + info["const_code"] + "</dd>"
@@ -50,13 +75,20 @@ function initialise(data)
   document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
   '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
   '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
-  '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
-  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'>' 
-			   + '<dt style="font-size:9pt">' + translations['H11'] + '</dt>'
+  '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ; */
+
+
+//  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'>';
+  var show_counts = '<dl class=\'header-def\'>';
+  if(info["inst_counts"]["abs_schcount"]!=0){ 
+  show_counts = show_counts + '<dt style="font-size:9pt">' + translations['H11'] + '</dt>'
                            + '<dd>' + info["inst_counts"]["abs_schcount"] + '</dd>'
-			   + '<dt style="font-size:9pt">' + translations['H12'] + '</dt>'
+  }
+  if(info["inst_counts"]["abs_preschcount"]!=0){
+   show_counts = show_counts + '<dt style="font-size:9pt">' + translations['H12'] + '</dt>'
                            + '<dd>' + info["inst_counts"]["abs_preschcount"] + '</dd>'
-                           + '</dl>'
+  }
+  document.getElementById('instcounts').innerHTML = show_counts + '</dl>';
   if(parseInt(info["lib_count"]) != 0){
   
     document.getElementById("learninghead").innerHTML = translations['H113'];

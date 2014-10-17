@@ -20,12 +20,37 @@ String.prototype.toTitleCase = function () {
 function initialise(data)
 {
   info = data;
+  consttype=info["const_type"];
   translations = info['transdict'];
   now = new Date()
   document.getElementById("reportdate").innerHTML = now.toDateString();
   document.getElementById("rephead").innerHTML = "<img src=\'/images/" + info["logo_link"] + "\' width='300px' vertical-align='bottom' border=0 />";
 
-  document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/af_arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
+ document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"
+                                                 + info['const_name'] + "</h1>";
+  constinfo =  "<dl class='header-def'><dt>";
+  if(consttype=='MP Constituency' || consttype=='MLA Constituency' || consttype=='Ward'){
+    constinfo = constinfo + "<dt>" + translations['H8'] + "</dt><dd>" + info["const_code"] + "</dd>"
+                                                 + "<dt>" + translations['H9'] + "</dt><dd>" + info["const_rep"] + "</dd>"
+                                                + "<dt>" + translations['H10'] + "</dt><dd>" + info["const_party"] + "</dd>";
+  }
+  else if(consttype=='BLOCK' || consttype=='PROJECT'){
+    constinfo =constinfo  + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>";
+  }
+  else if(consttype=='CLUSTER' || consttype=='CIRCLE'){
+    constinfo = constinfo + "<dt>" + translations["DISTRICT"] + "</dt><dd>" + info["const_dist"] + "</dd>"
+                                                + "<dt>" + translations["BLOCK"]+"/"+translations["PROJECT"] + "</dt><dd>" + info["const_blck"] + "</dd>";
+  }
+  document.getElementById("constinfo").innerHTML = constinfo + "</dl>";;
+  document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
+          '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
+          '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
+          '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
+  document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'><dt>' + translations['H11'] + '</dt><dd>' + info["inst_counts"]["schcount"] + '</dd>'
+                                                  + '<dt>' + translations['H12'] + '</dt><dd>' + info["inst_counts"]["preschcount"] + '</dd></dl>';
+
+
+/*  document.getElementById("constname").innerHTML = translations[info["const_type"]] + " <img src=\'/images/af_arrow.gif\' width='8px' vertical-align='center' border='0'/>" + "<br/><h1>"  
                                                + info['const_name'] + "</h1>";
   document.getElementById("constinfo").innerHTML =  "<dl class='header-def'><dt>" + translations['H8'] + "</dt><dd>"
                            + info["const_code"] + "</dd>"
@@ -35,7 +60,8 @@ function initialise(data)
   document.getElementById("hiddenip").innerHTML = '<input type="hidden" name="const_type" value="'+ info["constype"] + '" />' +
   '<input type="hidden" name="const_id" value="'+ info["const_id"] + '" />' +
   '<input type="hidden" name="forreport" value="'+ info["forreport"] + '" />' +
-  '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;
+  '<input type="hidden" name="rep_lang" value="'+ info["rep_lang"] + '" />' ;*/
+
   document.getElementById('instcounts').innerHTML = '<dl class=\'header-def\'>' 
 			   + '<dt style="font-size:9pt">' + translations['H11'] + '</dt>'
                            + '<dd>' + info["inst_counts"]["abs_schcount"] + '</dd>'
