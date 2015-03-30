@@ -9,6 +9,7 @@ import datetime
 import traceback
 import simplejson
 import codecs
+import os
 from operator import itemgetter
 
 # Needed to find the templates
@@ -17,7 +18,6 @@ abspath = os.path.dirname(__file__)
 sys.path.append(abspath)
 os.chdir(abspath)
 import db.KLPDB
-import db.Queries_dise
 import utils.DemographicsUtil
 import utils.FinancesUtil
 import utils.InfraUtil
@@ -35,12 +35,13 @@ from handlers.Library import Library
 from handlers.Nutrition import Nutrition 
 from handlers.Learning import Learning
 
+cache_location = '/tmp/klp_reports'
 render = web.template.render('templates/')
 
 urls = (
      '/','Index',
      '/errors','Errors',
-     '/charts/(.*)/(.*)/(.*)/(.*)/(.*)','Charts',
+     '/charts/(.*)/(.*)/(.*)/(.*)','Charts',
 )
 
 #import newrelic.agent
@@ -64,21 +65,6 @@ def treemenu(rep_db):
   #data.update({"circle":links.getCircreports(rep_db)})
   return data
 
-"""def treemenu(rep_db):
-  data = {}
-  links = Links()
-  data.update({"mp":links.getMPreports(rep_db)[rep_db]})
-  data.update({"mla":links.getMLAreports(rep_db)[rep_db]})
-  #data.update({"corporator":links.getWardreports(rep_db)[rep_db]})
-  data.update({"district":links.getSchDistreports(rep_db)[rep_db]})
-  data.update({"block":links.getBlkreports(rep_db)[rep_db]})
-  data.update({"cluster":links.getClusreports(rep_db)[rep_db]})
-  data.update({"year":links.getYearreports(rep_db)})
-  #data.update({"pre_dist":links.getPreDistreports(rep_db)[rep_db]})
-  #data.update({"project":links.getProjreports(rep_db)[rep_db]})
-  #data.update({"circle":links.getCircreports(rep_db)[rep_db]})
-  return data"""
-
 class Index:
   def GET(self,rep_db='dise'):
     data = {}
@@ -96,15 +82,15 @@ class Index:
     return render.index(simplejson.dumps(treemenu(rep_db),sort_keys=True))
 
 class Errors:
-  def GET(self,rep_db='klp'):
-    data = treemenu(rep_db)
+  def GET(self):
+    data = treemenu('klp')
     data.update({"errormsg":"Sorry! This report is currently unavailable due to insufficient data."})
     return render.index(simplejson.dumps(data,sort_keys=True))
 
 class Charts:
   
   """Returns the main template"""
-  def GET(self,searchby,constid,rep_lang,rep_type,year):
+  def GET(self,searchby,constid,rep_lang,rep_type):
     try:
       if searchby.lower() == 'mp':
         constype = 1
@@ -122,59 +108,89 @@ class Charts:
       if rep_lang.lower()=='kannada':
         lang = 1
       data = {}
-      db.Queries_dise.select_year(year)
       util = CommonUtil()
-      data.update({'transdict':util.getTranslations(lang, constype)})
+
+      report_str = '-'.join([searchby, str(constid), rep_lang, rep_type])
+      cache_file = os.path.join(cache_location, report_str + '.json')
+
+      def check_file(html_file):
+          data = ''
+          if os.path.isfile(html_file):
+              print ('Found Cache', report_str)
+              with open(html_file, 'r') as cache:
+                  data = cache.read()
+          return data
+
+      def write_file(html_file, data):
+          with open(html_file, 'w') as cache:
+              cache.write(data)
+
+      data_json = check_file(cache_file)
+      data.update({'transdict':util.getTranslations(lang)})
       if rep_type.lower() == 'demographics':
-        demographics = Demographics()
-        queries = ['schcount']
-        #if rep_db == 'klp':
-        #    queries.append('preschcount')
-        data.update(util.countsTable(constype,[constid],queries))
-        data.update(demographics.generateData(constype,[constid]))
-        data.update(utils.DemographicsUtil.getDemographicsText(data,lang,constype))
+        if data_json == '':
+          demographics = Demographics()
+          queries = ['schcount','preschcount']
+          data.update(util.countsTable(constype,[constid],queries))
+          data.update(demographics.generateData(constype,[constid]))
+          data.update(utils.DemographicsUtil.getDemographicsText(data,lang,constype))
+          data_json = simplejson.dumps(data, sort_keys=True)
+          write_file(cache_file, data_json)
         web.header('Content-Type','text/html; charset=utf-8')
-        return render.demographics_dise(simplejson.dumps(data,sort_keys=True))
+        return render.demographics(data_json)
       elif rep_type.lower() == 'finance':
-        finances = Finances()
-        queries = ['abs_schcount','fin_schcount']
-        data.update(util.countsTable(constype,[constid],queries))
-        data.update(finances.generateData(constype,[constid]))
-        data.update(utils.FinancesUtil.getFinancesText(data,lang,constype))
+        if data_json == '':
+          finances = Finances()
+          queries = ['abs_schcount','fin_schcount']
+          data.update(util.countsTable(constype,[constid],queries))
+          data.update(finances.generateData(constype,[constid]))
+          data.update(utils.FinancesUtil.getFinancesText(data,lang,constype))
+          data_json = simplejson.dumps(data, sort_keys=True)
+          write_file(cache_file, data_json)
         web.header('Content-Type','text/html; charset=utf-8')
-        return render.finances(simplejson.dumps(data,sort_keys=True))
+        return render.finances(data_json)
       elif rep_type.lower() == 'infrastructure':
-        infra = Infrastructure()
-        queries = ['abs_schcount']
-        data.update(util.countsTable(constype,[constid],queries))
-        data.update(infra.generateData(constype,[constid]))
-        data.update(utils.InfraUtil.getInfraText(data,lang,constype))
+        if data_json == '':
+          infra = Infrastructure()
+          queries = ['abs_schcount','abs_preschcount']
+          data.update(util.countsTable(constype,[constid],queries))
+          data.update(infra.generateData(constype,[constid]))
+          data.update(utils.InfraUtil.getInfraText(data,lang,constype))
+          data_json = simplejson.dumps(data, sort_keys=True)
+          write_file(cache_file, data_json)
         web.header('Content-Type','text/html; charset=utf-8')
-        return render.infrastructure(simplejson.dumps(data,sort_keys=True))
+        return render.infrastructure(data_json)
       elif rep_type.lower() == 'library':
-        library = Library()
-        queries = ['abs_schcount','abs_preschcount']
-        data.update(util.countsTable(constype,[constid],queries))
-        data.update(library.generateData(constype,[constid]))
-        data.update(utils.LibraryUtil.getLibText(data,lang))
+        if data_json == '':
+          library = Library()
+          queries = ['abs_schcount','abs_preschcount']
+          data.update(util.countsTable(constype,[constid],queries))
+          data.update(library.generateData(constype,[constid]))
+          data.update(utils.LibraryUtil.getLibText(data,lang,constype))
+          data_json = simplejson.dumps(data, sort_keys=True)
+          write_file(cache_file, data_json)
         web.header('Content-Type','text/html; charset=utf-8')
-        return render.library(simplejson.dumps(data,sort_keys=True))
+        return render.library(data_json)
       elif rep_type.lower() == 'nutrition':
-        nutrition = Nutrition()
-        data.update(nutrition.generateData(constype,[constid]))
-        data.update(utils.NutritionUtil.getNutriText(data,lang))
+        if data_json == '':
+          nutrition = Nutrition()
+          data.update(nutrition.generateData(constype,[constid]))
+          data.update(utils.NutritionUtil.getNutriText(data,lang))
+          data_json = simplejson.dumps(data, sort_keys=True)
+          write_file(cache_file, data_json)
         web.header('Content-Type','text/html; charset=utf-8')
-        return render.nutrition(simplejson.dumps(data,sort_keys=True))
+        return render.nutrition(data_json)
       elif rep_type.lower() == 'learning':
-        queries = ['abs_schcount','abs_preschcount']
-        data.update(util.countsTable(constype,[constid],queries))
-        learning = Learning()
-        data.update(learning.generateData(constype,[constid]))
-        data.update(utils.LearningUtil.getLearningText(data,lang))
+        if data_json == '':
+          queries = ['abs_schcount','abs_preschcount']
+          data.update(util.countsTable(constype,[constid],queries))
+          learning = Learning()
+          data.update(learning.generateData(constype,[constid]))
+          data.update(utils.LearningUtil.getLearningText(data,lang,constype))
+          data_json = simplejson.dumps(data, sort_keys=True)
+          write_file(cache_file, data_json)
         web.header('Content-Type','text/html; charset=utf-8')
-        return render.learning(simplejson.dumps(data,sort_keys=True))
-        #web.header('Content-Type', 'application/json')
-        #return jsonpickle.encode(data)
+        return render.learning(data_json)
       else:
         pass
     except:
